@@ -3,6 +3,8 @@ import Task from "./components/Task";
 
 import "./App.css";
 import TaskForm from "./components/TaskForm";
+import Search from "./components/Search";
+import Filter from "./components/Filter";
 
 function App() {
   const [tasks, setTasks] = useState([
@@ -13,6 +15,11 @@ function App() {
       isCompleted: false,
     },
   ]);
+
+  const [search, setSearch] = useState("");
+
+  const [filter, setFilter] = useState("all");
+  const [sort, setSort] = useState("A-Z");
 
   const removeTask = (taskId) => {
     const filteredTasks = tasks.filter((task) => task.id !== taskId);
@@ -43,16 +50,30 @@ function App() {
   return (
     <div className="app">
       <h1>Lista de Tarefas</h1>
+      <Search search={search} setSearch={setSearch} />
+      <Filter filter={filter} setFilter={setFilter} />
       <div className="task-list">
-        {tasks.map((task) => (
-          <Task
-            key={task.id}
-            task={task}
-            removeTask={removeTask}
-            completeTask={completeTask}
-          />
-        ))}
+        {tasks
+          .filter((task) =>
+            filter === "all"
+              ? true
+              : filter === "completed"
+              ? task.isCompleted
+              : !task.isCompleted
+          )
+          .filter((task) =>
+            task.text.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((task) => (
+            <Task
+              key={task.id}
+              task={task}
+              removeTask={removeTask}
+              completeTask={completeTask}
+            />
+          ))}
       </div>
+
       <TaskForm addTask={addTask} />
     </div>
   );
