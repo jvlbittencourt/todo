@@ -51,7 +51,7 @@ function App() {
     <div className="app">
       <h1>Lista de Tarefas</h1>
       <Search search={search} setSearch={setSearch} />
-      <Filter filter={filter} setFilter={setFilter} />
+      <Filter filter={filter} setFilter={setFilter} setSort={setSort} />
       <div className="task-list">
         {tasks
           .filter((task) =>
@@ -63,6 +63,11 @@ function App() {
           )
           .filter((task) =>
             task.text.toLowerCase().includes(search.toLowerCase())
+          )
+          .sort((a, b) =>
+            sort === "A-Z"
+              ? a.text.localeCompare(b.text)
+              : b.text.localeCompare(a.text)
           )
           .map((task) => (
             <Task
